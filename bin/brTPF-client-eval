@@ -36,7 +36,7 @@ Logger.setLevel(args.l || 'warning');
 var start = new Date();
 var DEBUGfirstTime, DEBUGtime, DEBUGfirstHttp, DEBUGhttp, DEBUGtotal = 0;
 
-var timeoutInMins = 30;
+var timeoutInMins = 5;
 
 setTimeout( function () {
   DEBUGtime = new Date() - start;

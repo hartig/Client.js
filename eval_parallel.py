@@ -16,18 +16,18 @@ AVAILABLE_CORES = 7
 #         | awk  '{ print "Time: "$4}' ) )'''
 
 
-def eval_parallel(command, query_folder, server):
+def eval_parallel(command, server, query_folder):
     arglist = []
     total_counter = 0
     for query_file in sorted(glob.glob(query_folder + '/*')):
-        arglist.append((command, query_file, server))
+        arglist.append((command, server, query_file))
     print('Processing ' + str(total_counter) + ' queries ' +
           str(AVAILABLE_CORES) + ' cores, this may take a while...')
     pool = Pool(processes=AVAILABLE_CORES)
     pool.map_async(run_command, arglist).get()
 
 
-def run_command(command, query_file, server):
+def run_command((command, server, query_file)):
     print('Query: ' + query_file)
     cmd = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'eval_query.sh ')
     cmd += command + ' ' + server + ' ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), query_file)
@@ -40,7 +40,7 @@ def run_command(command, query_file, server):
     print('Return code TPF process: ' + str(ret))
 
 
-def main(command, query_folder, server):
+def main(command, server, query_folder):
     for query_file in sorted(glob.glob(query_folder + '/*.rq')):
         print('Query: ' + query_file)
         cmd = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'eval_query.sh ')
@@ -58,4 +58,5 @@ if __name__ == '__main__':
     if len(sys.argv) == 1:
         print('Usage: python eval.py query_folder')
     else:
-        main(sys.argv[1], sys.argv[2], sys.argv[3])
+        # (command, server, query_folder)
+        eval_parallel(sys.argv[1], sys.argv[2], sys.argv[3])
