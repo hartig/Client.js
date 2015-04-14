@@ -7,7 +7,7 @@ import subprocess
 import shlex
 
 
-AVAILABLE_CORES = 7
+AVAILABLE_CORES = 4
 
 # _TPF_CLIENT_COMMAND = '''results=$(timeout %s %s %s %s
 #     | tee >(grep 'Request\s#' | wc -l
