@@ -1,6 +1,6 @@
 {
   "algorithm": 2,
-  "startFragment": "http://172.31.21.208:8080/LDF-Server-0.0.1/watdiv",
+  "startFragment": "http://localhost:8080/watdiv",
 
   "prefixes": {
     "rdf":         "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
