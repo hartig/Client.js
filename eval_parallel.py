@@ -7,7 +7,7 @@ import subprocess
 import shlex
 
 
-AVAILABLE_CORES = 4
+AVAILABLE_CORES = 10
 
 # _TPF_CLIENT_COMMAND = '''results=$(timeout %s %s %s %s
 #     | tee >(grep 'Request\s#' | wc -l
@@ -20,11 +20,12 @@ def eval_parallel(command, server, query_folder):
     arglist = []
     total_counter = 0
     for query_file in sorted(glob.glob(query_folder + '/*')):
+        print(command, server, query_file)
         arglist.append((command, server, query_file))
     print('Processing ' + str(total_counter) + ' queries ' +
           str(AVAILABLE_CORES) + ' cores, this may take a while...')
     pool = Pool(processes=AVAILABLE_CORES)
-    pool.map_async(run_command, arglist).get()
+    pool.map_async(main, arglist).get()
 
 
 def run_command((command, server, query_file)):
@@ -56,7 +57,7 @@ def main(command, server, query_folder):
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        print('Usage: python eval.py query_folder')
+        print('Usage: python eval_parallel.py config_file query_folder')
     else:
         # (command, server, query_folder)
         eval_parallel(sys.argv[1], sys.argv[2], sys.argv[3])

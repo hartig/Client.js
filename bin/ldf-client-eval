@@ -30,7 +30,7 @@ var configFile = args.c ? args.c : path.join(__dirname, '../config-default.json'
     mimeType = args.t || 'application/json';
 
 // Configure logging
-var logname = 'eval_TPF-orig.csv';
+var logname = 'eval_TPF-opt.csv';
 Logger.setLevel(args.l || 'warning');
 
 var start = new Date();

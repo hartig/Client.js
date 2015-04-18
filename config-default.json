@@ -1,5 +1,4 @@
 {
-  "algorithm": 2,
   "startFragment": "http://localhost:8080/watdiv",
 
   "prefixes": {
