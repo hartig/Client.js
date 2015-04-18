@@ -65,20 +65,20 @@ def run_command((command, server, query_file)):
     print('Return code TPF process: ' + str(ret))
 
 
-def main(command, server, query_folder):
+def main((command, server, query_folder)):
     for query_file in sorted(glob.glob(query_folder + '/*.rq')):
         print('Query: ' + query_file)
         cmd = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'eval_query.sh ')
         cmd += command + ' ' + server + ' ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), query_file)
         try:
-            command = Command(cmd)
-            command.run(timeout=301000)
-            # tpf_process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE)
+            # command = Command(cmd)
+            # command.run(timeout=302)
+            tpf_process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, timeout=1)
         except Exception, e:
             print(e)
             traceback.print_exc(file=sys.stdout)
-        # ret = tpf_process.wait()
-        # print('Return code TPF process: ' + str(ret))
+        ret = tpf_process.wait()
+        print('Return code TPF process: ' + str(ret))
 
 
 if __name__ == '__main__':
