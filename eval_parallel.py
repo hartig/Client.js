@@ -17,27 +17,27 @@ AVAILABLE_CORES = 10
 #         | awk  '{ print "Time: "$4}' ) )'''
 
 
-class Command(object):
-    def __init__(self, cmd):
-        self.cmd = cmd
-        self.process = None
+# class Command(object):
+#     def __init__(self, cmd):
+#         self.cmd = cmd
+#         self.process = None
 
-    def run(self, timeout):
-        def target():
-            print 'Thread started'
-            self.process = subprocess.Popen(self.cmd, shell=True)
-            self.process.communicate()
-            print 'Thread finished'
+#     def run(self, timeout):
+#         def target():
+#             print 'Thread started'
+#             self.process = subprocess.Popen(self.cmd, shell=True)
+#             self.process.communicate()
+#             print 'Thread finished'
 
-        thread = threading.Thread(target=target)
-        thread.start()
+#         thread = threading.Thread(target=target)
+#         thread.start()
 
-        thread.join(timeout)
-        if thread.is_alive():
-            print 'Terminating process'
-            self.process.terminate()
-            thread.join()
-        print self.process.returncode
+#         thread.join(timeout)
+#         if thread.is_alive():
+#             print 'Terminating process'
+#             self.process.terminate()
+#             thread.join()
+#         print self.process.returncode
 
 
 def eval_parallel(command, server, query_folder):
