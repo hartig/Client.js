@@ -5,6 +5,7 @@ import os
 import glob
 import subprocess
 import shlex
+import threading
 
 
 AVAILABLE_CORES = 10
@@ -14,6 +15,29 @@ AVAILABLE_CORES = 10
 #         | awk  '{ print "Requests: "$1}') >(grep 'Result #' | wc -l
 #         | awk  '{ print "Results: "$1}') >(grep 'First Result Time'
 #         | awk  '{ print "Time: "$4}' ) )'''
+
+
+class Command(object):
+    def __init__(self, cmd):
+        self.cmd = cmd
+        self.process = None
+
+    def run(self, timeout):
+        def target():
+            print 'Thread started'
+            self.process = subprocess.Popen(self.cmd, shell=True)
+            self.process.communicate()
+            print 'Thread finished'
+
+        thread = threading.Thread(target=target)
+        thread.start()
+
+        thread.join(timeout)
+        if thread.is_alive():
+            print 'Terminating process'
+            self.process.terminate()
+            thread.join()
+        print self.process.returncode
 
 
 def eval_parallel(command, server, query_folder):
@@ -47,12 +71,14 @@ def main(command, server, query_folder):
         cmd = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'eval_query.sh ')
         cmd += command + ' ' + server + ' ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), query_file)
         try:
-            tpf_process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE)
+            command = Command(cmd)
+            command.run(timeout=301000)
+            # tpf_process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE)
         except Exception, e:
             print(e)
             traceback.print_exc(file=sys.stdout)
-        ret = tpf_process.wait()
-        print('Return code TPF process: ' + str(ret))
+        # ret = tpf_process.wait()
+        # print('Return code TPF process: ' + str(ret))
 
 
 if __name__ == '__main__':
