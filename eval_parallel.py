@@ -52,33 +52,29 @@ def eval_parallel(command, server, query_folder):
     pool.map_async(main, arglist).get()
 
 
-def run_command((command, server, query_file)):
-    print('Query: ' + query_file)
-    cmd = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'eval_query.sh ')
-    cmd += command + ' ' + server + ' ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), query_file)
-    try:
-        tpf_process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE)
-    except Exception, e:
-        print(e)
-        traceback.print_exc(file=sys.stdout)
-    ret = tpf_process.wait()
-    print('Return code TPF process: ' + str(ret))
+# def run_command((command, server, query_file)):
+#     print('Query: ' + query_file)
+#     cmd = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'eval_query.sh ')
+#     cmd += command + ' ' + server + ' ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), query_file)
+#     try:
+#         tpf_process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE)
+#     except Exception, e:
+#         print(e)
+#         traceback.print_exc(file=sys.stdout)
+#     ret = tpf_process.wait()
+#     print('Return code TPF process: ' + str(ret))
 
 
-def main((command, server, query_folder)):
+def main((command, config_file, query_folder)):
     for query_file in sorted(glob.glob(query_folder + '/*.rq')):
         print('Query: ' + query_file)
-        cmd = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'eval_query.sh ')
-        cmd += command + ' ' + server + ' ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), query_file)
+        cmd = './bin/' + command + ' -c ' + config_file + ' ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), query_file)
+        print('Command: ' + cmd)
         try:
-            # command = Command(cmd)
-            # command.run(timeout=302)
-            tpf_process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, timeout=1)
+            subprocess.call(cmd, shell=True)
         except Exception, e:
             print(e)
             traceback.print_exc(file=sys.stdout)
-        ret = tpf_process.wait()
-        print('Return code TPF process: ' + str(ret))
 
 
 if __name__ == '__main__':
