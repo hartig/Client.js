@@ -1,5 +1,5 @@
 {
-  "startFragment": "http://54.207.105.98/LDF-Server-0.0.1/watdiv",
+  "startFragment": "http://54.207.75.124/LDF-Server-0.0.1/watdiv",
 
   "prefixes": {
     "rdf":         "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
