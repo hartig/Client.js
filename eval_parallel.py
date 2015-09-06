@@ -13,7 +13,8 @@ def eval_parallel(command, server, query_folder):
     arglist = []
     total_counter = 0
     for query_dir in sorted(glob.glob(query_folder + '/*')):
-        for query_file in sorted(glob.glob(query_folder + '/*')):
+        print(query_folder)
+        for query_file in sorted(glob.glob(query_dir + '/*')):
             print(command, server, query_file)
             arglist.append((command, server, query_file))
     print('Processing ' + str(total_counter) + ' queries ' +
@@ -35,16 +36,16 @@ def eval_parallel(command, server, query_folder):
 #     print('Return code TPF process: ' + str(ret))
 
 
-def main((command, config_file, query_folder)):
-    for query_file in sorted(glob.glob(query_folder + '/*.rq')):
-        print('Query: ' + query_file)
-        cmd = './bin/' + command + ' -c ' + config_file + ' ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), query_file)
-        print('Command: ' + cmd)
-        try:
-            subprocess.call(cmd, shell=True)
-        except Exception, e:
-            print(e)
-            traceback.print_exc(file=sys.stdout)
+def main((command, config_file, query_file)):
+    # for query_file in sorted(glob.glob(query_folder + '/*.rq')):
+    print('Query: ' + query_file)
+    cmd = './bin/' + command + ' -c ' + config_file + ' ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), query_file)
+    print('Command: ' + cmd)
+    try:
+        subprocess.call(cmd, shell=True)
+    except Exception, e:
+        print(e)
+        traceback.print_exc(file=sys.stdout)
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 {
-  "startFragment": "http://54.207.75.124/LDF-Server-0.0.1/watdiv",
+  "startFragment": "http://127.0.0.1:8080/watdiv",
   "algorithm": 2,
 
   "prefixes": {
