@@ -17,10 +17,8 @@
   },
 
   "ssl": {
-    "keys" : {
-    "key": "keys/certs/client/my-root-ca.crt.pem",
-    "ca": ["keys/certs/client/my-app-client.key.pem"],
-    "cert": "keys/certs/client/my-app-client.crt.pem"
-    }
+    "key": "keys/my-app-client.key.pem",
+    "ca":  "keys/my-root-ca.crt.pem" ,
+    "cert": "keys/my-app-client.crt.pem"
   }
 }
