@@ -83,6 +83,83 @@ $ ./bin/ldf-client http://fragments.dbpedia.org/2014/en queries/artists-york.spa
 ```
 The `queries` folder contains several example queries for DBpedia.
 
+### Configure HTTPS & WebID
+
+#### SSL Configuration
+
+1. Create a WebID
+
+A WebID is an RDF file that describes the social profile of you or your organization.
+It is published under a unique URI, which is used for identification and authentication.
+
+For instance, the WebID of a person called Bob [](https://bob.example.org/profile#me) can look like this:
+
+```
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<> a foaf:PersonalProfileDocument ;
+   foaf:maker <#me> ;
+   foaf:primaryTopic <#me> .
+
+<#me> a foaf:Person ;
+   foaf:name "Bob" ;
+   foaf:knows <https://example.edu/p/Alice#MSc> ;
+   foaf:img <https://bob.example.org/picture.jpg> .
+```
+
+2. Create a client certificate including WebID
+
+First, create a private key to create certificates.
+
+```bash
+openssl genrsa \
+  -out certs/client/my-app-client.key.pem \
+  2048
+```
+
+Create a SSL client certificate that includes your WebID in the `subjectAltName`.
+
+```bash
+# Create a trusted client cert
+# NOTE: You MUST match CN to the domain name or ip address you want to use
+openssl req -new \
+  -key certs/client/my-app-client.key.pem \
+  -out certs/tmp/my-app-client.csr.pem \
+  -subj "/C=US/ST=Utah/L=Provo/O=ACME App Client/CN=client.example.net/subjectAltName=URI:https://bob.example.org/profile#me"
+```
+
+3. Add your public key to the WebID
+
+Additionally, add your public key to the WebID document.
+
+```
+:bob cert:key [ a cert:RSAPublicKey;
+                cert:modulus "00cb24ed85d64d794b..."^^xsd:hexBinary;
+                cert:exponent 65537 ] .
+```
+
+4. Become a trusted peer for the server.
+
+Exchange your certificate with the server so it can sign it with your root CA. See the [server documentation](https://github.com/LinkedDataFragments/Server.js/blob/feature-https-authentication/README.md#sign-certificates-from-clients) for more information.
+
+The server should return you the signed certificate, resulting in, for example, `keys/my-app-client.crt.pem`.
+
+
+#### Configure the client
+
+The client can the be easily configured to use HTTPS in combination with WebID like so.
+
+```json
+{
+  "ssl": {
+    "key": "keys/my-app-client.key.pem",
+    "ca":  "keys/my-root-ca.crt.pem" ,
+    "cert": "keys/my-app-client.crt.pem"
+  }
+}
+```
+
+Make sure your WebID is online so the server is able to download it.
 
 ## License
 The Linked Data Fragments client is written by [Ruben Verborgh](http://ruben.verborgh.org/) and colleagues.
