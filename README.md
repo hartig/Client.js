@@ -87,7 +87,7 @@ The `queries` folder contains several example queries for DBpedia.
 
 #### SSL Configuration
 
-1. Create a WebID
+##### Create a WebID
 
 A WebID is an RDF file that describes the social profile of you or your organization.
 It is published under a unique URI, which is used for identification and authentication.
@@ -107,7 +107,7 @@ For instance, the WebID of a person called Bob [](https://bob.example.org/profil
    foaf:img <https://bob.example.org/picture.jpg> .
 ```
 
-2. Create a client certificate including WebID
+##### Create a client certificate including WebID
 
 First, create a private key to create certificates.
 
@@ -128,7 +128,7 @@ openssl req -new \
   -subj "/C=US/ST=Utah/L=Provo/O=ACME App Client/CN=client.example.net/subjectAltName=URI:https://bob.example.org/profile#me"
 ```
 
-3. Add your public key to the WebID
+##### Add your public key to the WebID
 
 Additionally, add your public key to the WebID document.
 
@@ -137,8 +137,7 @@ Additionally, add your public key to the WebID document.
                 cert:modulus "00cb24ed85d64d794b..."^^xsd:hexBinary;
                 cert:exponent 65537 ] .
 ```
-
-4. Become a trusted peer for the server.
+##### Become a trusted peer for the server.
 
 Exchange your certificate with the server so it can sign it with your root CA. See the [server documentation](https://github.com/LinkedDataFragments/Server.js/blob/feature-https-authentication/README.md#sign-certificates-from-clients) for more information.
 
