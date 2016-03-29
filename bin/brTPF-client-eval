@@ -9,9 +9,10 @@ var args = require('minimist')(process.argv.slice(2));
 if (args.listformats)
   return Object.keys(ldf.SparqlResultWriter.writers).forEach(function (t) { console.log(t); });
 if (!(args.q || args.f) && args._.length < 1 || args._.length > 2 || args.h || args.help) {
-  console.error('usage: ldf-client [startFragment] query.sparql [-c config.json] ' +
-                                  '[-t application/json] [-l logLevel] [--help]');
-  console.error('       ldf-client --listformats (Lists supported result formats for -t)');
+  console.error('usage: brTPF-client-eval [startFragment] query.sparql [-c config.json] ' +
+                                          '[-t application/json] [-l logLevel] [--help]' +
+                                          '[--maxNumberOfMappings x]' );
+  console.error('       brTPF-client-eval --listformats (Lists supported result formats for -t)');
   return process.exit(1);
 }
 
@@ -28,6 +29,8 @@ var configFile = args.c ? args.c : path.join(__dirname, '../config-default.json'
     startFragment = args._.pop() || config.startFragment,
     query = args.q || (args.f || fs.existsSync(queryFile) ? fs.readFileSync(queryFile, 'utf8') : queryFile),
     mimeType = args.t || 'application/json';
+
+config.maxNumberOfMappings = args.maxNumberOfMappings ? args.maxNumberOfMappings : 10
 
 // Configure logging
 var logname = 'eval_brTPF.csv';
