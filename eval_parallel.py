@@ -14,13 +14,14 @@ def handler(signum, frame):
 
 def main_parallel(command, start_fragment, config_file, query_folders, batch):
     arglist = []
-    AVAILABLE_CORES = 22
+    AVAILABLE_CORES = 20
     cnt = 0
-    for query_folder in sorted(glob.glob(query_folders)):
-        arglist.append(command, start_fragment, config_file, query_folder, batch)
+    for query_folder in sorted(glob.glob(query_folders + '/*')):
+        print(query_folder)
+        arglist.append((command, start_fragment, config_file, query_folder, batch))
         cnt += 1
         if cnt == AVAILABLE_CORES:
-            break;
+            break
 
     print('Processing ' + str(cnt) + ' files with ' +
           str(AVAILABLE_CORES) + ' cores, this may take a while...')
@@ -48,9 +49,8 @@ if __name__ == '__main__':
         signal.signal(signal.SIGALRM, handler)
         signal.alarm(360)
         try:
-            main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+            main_parallel(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
         except Exception, exc:
             print exc
             sys.exit()
         sys.exit()
-
