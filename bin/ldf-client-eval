@@ -41,8 +41,9 @@ var timeoutInMins = 5;
 setTimeout( function () {
   DEBUGtime = new Date() - start;
   DEBUGhttp = config.fragmentsClient._httpClient.DEBUGcalls;
-    DEBUGdata = config.fragmentsClient._overallNumberOfTriplesReceived;
-  fs.appendFileSync(logname, [queryFile,DEBUGfirstTime, DEBUGfirstHttp, DEBUGtime, DEBUGhttp, DEBUGdata, DEBUGtotal, 'TIMEOUT', timeoutInMins].join(',') + '\n');
+  DEBUGtps = config.fragmentsClient._numberOfTriplePatternsInQuery;
+  DEBUGdata = config.fragmentsClient._overallNumberOfTriplesReceived;
+  fs.appendFileSync(logname, [queryFile,DEBUGtps,DEBUGfirstTime, DEBUGfirstHttp, DEBUGtime, DEBUGhttp, DEBUGdata, DEBUGtotal, 'TIMEOUT', timeoutInMins].join(',') + '\n');
   process.exit();
 }, timeoutInMins*60*1000 );
 
@@ -82,16 +83,18 @@ try {
     console.error(error.stack);
     DEBUGtime = new Date() - start;
     DEBUGhttp = config.fragmentsClient._httpClient.DEBUGcalls;
+    DEBUGtps = config.fragmentsClient._numberOfTriplePatternsInQuery;
     DEBUGdata = config.fragmentsClient._overallNumberOfTriplesReceived;
-    fs.appendFileSync(logname, [queryFile,DEBUGfirstTime, DEBUGfirstHttp, DEBUGtime, DEBUGhttp, DEBUGdata, DEBUGtotal, 'ERROR', error].join(',') + '\n');
+    fs.appendFileSync(logname, [queryFile,DEBUGtps,DEBUGfirstTime, DEBUGfirstHttp, DEBUGtime, DEBUGhttp, DEBUGdata, DEBUGtotal, 'ERROR', error].join(',') + '\n');
     process.exit();
   });
 
   writer.on('end', function () {
     DEBUGtime = new Date() - start;
     DEBUGhttp = config.fragmentsClient._httpClient.DEBUGcalls;
+    DEBUGtps = config.fragmentsClient._numberOfTriplePatternsInQuery;
     DEBUGdata = config.fragmentsClient._overallNumberOfTriplesReceived;
-    fs.appendFileSync(logname, [queryFile,DEBUGfirstTime, DEBUGfirstHttp, DEBUGtime, DEBUGhttp, DEBUGdata, DEBUGtotal].join(',') + '\n');
+    fs.appendFileSync(logname, [queryFile,DEBUGtps,DEBUGfirstTime, DEBUGfirstHttp, DEBUGtime, DEBUGhttp, DEBUGdata, DEBUGtotal].join(',') + '\n');
     process.stdout.flush();
   });
 }
