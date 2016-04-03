@@ -66,7 +66,7 @@ try {
         DEBUGfirstTime = new Date() - start;
         DEBUGfirstHttp = config.fragmentsClient._httpClient.DEBUGcalls;
       }
-      process.stdout.write(data);
+//      process.stdout.write(data);
     });
     break;
   // Write an RDF representation of all results
