@@ -12,9 +12,9 @@ def handler(signum, frame):
     raise Exception("end of time")
 
 
-def main_parallel(command, start_fragment, config_file, query_folders, batch):
+def main_parallel(command, start_fragment, config_file, query_folders, batch, cores):
     arglist = []
-    AVAILABLE_CORES = 20
+    AVAILABLE_CORES = cores
     cnt = 0
     for query_folder in sorted(glob.glob(query_folders + '/*')):
         print(query_folder)
@@ -49,7 +49,7 @@ if __name__ == '__main__':
         signal.signal(signal.SIGALRM, handler)
         signal.alarm(360)
         try:
-            main_parallel(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+            main_parallel(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
         except Exception, exc:
             print exc
             sys.exit()

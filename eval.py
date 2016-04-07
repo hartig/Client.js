@@ -6,9 +6,23 @@ import subprocess
 import signal
 
 
-def handler(signum, frame):
-    print "Forever is over!"
-    raise Exception("end of time")
+class Timeout():
+    """Timeout class using ALARM signal"""
+    class Timeout(Exception):
+        pass
+
+    def __init__(self, sec):
+        self.sec = sec
+
+    def __enter__(self):
+        signal.signal(signal.SIGALRM, self.raise_timeout)
+        signal.alarm(self.sec)
+
+    def __exit__(self, *args):
+        signal.alarm(0)  # disable alarm
+
+    def raise_timeout(self, *args):
+        raise Timeout.Timeout()
 
 
 def main(command, start_fragment, config_file, query_folder, batch):
@@ -28,12 +42,10 @@ if __name__ == '__main__':
         print('Usage: python eval.py config_file query_folder')
     else:
         # (command, server, query_folder)
-        signal.signal(signal.SIGALRM, handler)
-        signal.alarm(360)
         try:
-            main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
-        except Exception, exc:
-            print exc
+            with Timeout(3):
+                main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+        except Timeout.Timeout:
+            print "Timeout"
             sys.exit()
         sys.exit()
-
