@@ -14,7 +14,7 @@ def handler(signum, frame):
 
 def main_parallel(command, start_fragment, config_file, query_folders, batch, cores):
     arglist = []
-    AVAILABLE_CORES = cores
+    AVAILABLE_CORES = int(cores)
     cnt = 0
     for query_folder in sorted(glob.glob(query_folders + '/*')):
         print(query_folder)
