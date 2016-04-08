@@ -11,7 +11,7 @@ if (args.listformats)
 if (!(args.q || args.f) && args._.length < 1 || args._.length > 2 || args.h || args.help) {
   console.error('usage: brTPF-client-eval [startFragment] query.sparql [-c config.json] ' +
                                           '[-t application/json] [-l logLevel] [--help]' +
-                                          '[--maxNumberOfMappings x]' );
+                                          '[--maxNumberOfMappings x]' + '[--outputFileNumber y]' );
   console.error('       brTPF-client-eval --listformats (Lists supported result formats for -t)');
   return process.exit(1);
 }
@@ -33,7 +33,7 @@ var configFile = args.c ? args.c : path.join(__dirname, '../config-default.json'
 config.maxNumberOfMappings = args.maxNumberOfMappings ? args.maxNumberOfMappings : 10
 
 // Configure logging
-var logname = 'eval_brTPF.csv';
+var logname = 'eval_brTPF_' + args.outputFileNumber + '.csv';
 Logger.setLevel(args.l || 'warning');
 
 var start = new Date();

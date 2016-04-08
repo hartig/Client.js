@@ -15,22 +15,22 @@ def handler(signum, frame):
 def main_parallel(command, start_fragment, config_file, query_folders, batch, cores):
     arglist = []
     AVAILABLE_CORES = int(cores)
-    cnt = 0
+    folder_number = 0
     for query_folder in sorted(glob.glob(query_folders + '/*')):
         print(query_folder)
-        arglist.append((command, start_fragment, config_file, query_folder, batch))
-        cnt += 1
+        arglist.append((command, start_fragment, config_file, query_folder, batch, folder_number))
+        folder_number += 1
 
-    print('Processing ' + str(cnt) + ' files with ' +
+    print('Processing ' + str(folder_number) + ' files with ' +
           str(AVAILABLE_CORES) + ' cores, this may take a while...')
     pool = Pool(processes=AVAILABLE_CORES)
     pool.map_async(main, arglist).get()
 
 
-def main((command, start_fragment, config_file, query_folder, batch)):
+def main((command, start_fragment, config_file, query_folder, batch, folder_number)):
     for query_file in sorted(glob.glob(query_folder + '/*.rq')):
         print('Query: ' + query_file)
-        cmd = './bin/' + command + ' ' + start_fragment + ' -c ' + config_file + ' -f ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), query_file + ' --maxNumberOfMappings ' + batch)
+        cmd = './bin/' + command + ' ' + start_fragment + ' -c ' + config_file + ' -f ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), query_file + ' --maxNumberOfMappings ' + batch  + ' --outputFileNumber ' + folder_number)
         print('Command: ' + cmd)
         try:
             subprocess.call(cmd, shell=True)
