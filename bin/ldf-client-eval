@@ -10,7 +10,7 @@ if (args.listformats)
   return Object.keys(ldf.SparqlResultWriter.writers).forEach(function (t) { console.log(t); });
 if (!(args.q || args.f) && args._.length < 1 || args._.length > 2 || args.h || args.help) {
   console.error('usage: ldf-client [startFragment] query.sparql [-c config.json] ' +
-                                  '[-t application/json] [-l logLevel] [--help]');
+                                  '[-t application/json] [-l logLevel] [--help] [--outputFileNumber y]');
   console.error('       ldf-client --listformats (Lists supported result formats for -t)');
   return process.exit(1);
 }
@@ -30,7 +30,7 @@ var configFile = args.c ? args.c : path.join(__dirname, '../config-default.json'
     mimeType = args.t || 'application/json';
 
 // Configure logging
-var logname = 'eval_TPF.csv';
+var logname = 'eval_TPF_' + args.outputFileNumber + '.csv';
 Logger.setLevel(args.l || 'warning');
 
 var start = new Date();
