@@ -20,8 +20,6 @@ def main_parallel(command, start_fragment, config_file, query_folders, batch, co
         print(query_folder)
         arglist.append((command, start_fragment, config_file, query_folder, batch))
         cnt += 1
-        if cnt == AVAILABLE_CORES:
-            break
 
     print('Processing ' + str(cnt) + ' files with ' +
           str(AVAILABLE_CORES) + ' cores, this may take a while...')
