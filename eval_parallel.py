@@ -30,7 +30,7 @@ def main_parallel(command, start_fragment, config_file, query_folders, batch, co
 def main((command, start_fragment, config_file, query_folder, batch, folder_number)):
     for query_file in sorted(glob.glob(query_folder + '/*.rq')):
         print('Query: ' + query_file)
-        cmd = './bin/' + command + ' ' + start_fragment + ' -c ' + config_file + ' -f ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), query_file + ' --maxNumberOfMappings ' + batch  + ' --outputFileNumber ' + folder_number)
+        cmd = './bin/' + command + ' ' + start_fragment + ' -c ' + config_file + ' -f ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), query_file + ' --maxNumberOfMappings ' + batch  + ' --outputFileNumber ' + str(folder_number))
         print('Command: ' + cmd)
         try:
             subprocess.call(cmd, shell=True)
