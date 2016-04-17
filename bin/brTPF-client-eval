@@ -33,8 +33,19 @@ var configFile = args.c ? args.c : path.join(__dirname, '../config-default.json'
 config.maxNumberOfMappings = args.maxNumberOfMappings ? args.maxNumberOfMappings : 10
 
 // Configure logging
-var logname = 'eval_brTPF_' + args.outputFileNumber + '.csv';
+var measurementsFile  = 'eval_brTPF_' + args.outputFileNumber + '.csv';
+var measurementsFile2 = 'eval2_brTPF_' + args.outputFileNumber + '.csv';
 Logger.setLevel(args.l || 'warning');
+
+function messageForMeasurementsFile2( chunkSizeCounters ) {
+  var msg = ""
+  for ( var i = 0; i <= config.maxNumberOfMappings; i++ ) {
+    if ( chunkSizeCounters[i] === undefined || ! chunkSizeCounters[i] ) {
+      chunkSizeCounters[i] = 0;
+    }
+  }
+  return chunkSizeCounters.join(',');
+}
 
 var start = new Date();
 var DEBUGfirstTime, DEBUGtime, DEBUGfirstHttp, DEBUGhttp, DEBUGdata, DEBUGtotal = 0;
@@ -46,7 +57,8 @@ setTimeout( function () {
   DEBUGhttp = config.fragmentsClient._httpClient.DEBUGcalls;
   DEBUGtps = config.fragmentsClient._numberOfTriplePatternsInQuery;
   DEBUGdata = config.fragmentsClient._overallNumberOfTriplesReceived;
-  fs.appendFileSync(logname, [queryFile,DEBUGtps,DEBUGfirstTime, DEBUGfirstHttp, DEBUGtime, DEBUGhttp, DEBUGdata, DEBUGtotal, 'TIMEOUT', timeoutInMins].join(',') + '\n');
+  fs.appendFileSync(measurementsFile, [queryFile,DEBUGtps,DEBUGfirstTime, DEBUGfirstHttp, DEBUGtime, DEBUGhttp, DEBUGdata, DEBUGtotal, 'TIMEOUT', timeoutInMins].join(',') + '\n');
+  fs.appendFileSync(measurementsFile2, queryFile + ',' + messageForMeasurementsFile2(config.fragmentsClient._chunkSizeCounters) + ',TIMEOUT,' + timeoutInMins + '\n');
   process.exit();
 }, timeoutInMins*60*1000 );
 
@@ -88,7 +100,8 @@ try {
     DEBUGhttp = config.fragmentsClient._httpClient.DEBUGcalls;
     DEBUGtps = config.fragmentsClient._numberOfTriplePatternsInQuery;
     DEBUGdata = config.fragmentsClient._overallNumberOfTriplesReceived;
-    fs.appendFileSync(logname, [queryFile,DEBUGtps,DEBUGfirstTime, DEBUGfirstHttp, DEBUGtime, DEBUGhttp, DEBUGdata, DEBUGtotal, 'ERROR', error].join(',') + '\n');
+    fs.appendFileSync(measurementsFile, [queryFile,DEBUGtps,DEBUGfirstTime, DEBUGfirstHttp, DEBUGtime, DEBUGhttp, DEBUGdata, DEBUGtotal, 'ERROR', error].join(',') + '\n');
+    fs.appendFileSync(measurementsFile2, queryFile + ',' + messageForMeasurementsFile2(config.fragmentsClient._chunkSizeCounters) + '\n');
     process.exit();
   });
 
@@ -97,7 +110,8 @@ try {
     DEBUGhttp = config.fragmentsClient._httpClient.DEBUGcalls;
     DEBUGtps = config.fragmentsClient._numberOfTriplePatternsInQuery;
     DEBUGdata = config.fragmentsClient._overallNumberOfTriplesReceived;
-    fs.appendFileSync(logname, [queryFile,DEBUGtps,DEBUGfirstTime, DEBUGfirstHttp, DEBUGtime, DEBUGhttp, DEBUGdata, DEBUGtotal].join(',') + '\n');
+    fs.appendFileSync(measurementsFile, [queryFile,DEBUGtps,DEBUGfirstTime, DEBUGfirstHttp, DEBUGtime, DEBUGhttp, DEBUGdata, DEBUGtotal].join(',') + '\n');
+    fs.appendFileSync(measurementsFile2, queryFile + ',' + messageForMeasurementsFile2(config.fragmentsClient._chunkSizeCounters) + '\n');
     process.stdout.flush();
   });
 }
