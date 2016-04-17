@@ -20,7 +20,7 @@
     "hint": "./node_modules/jshint/bin/jshint bin/* lib test"
   },
   "dependencies": {
-    "request": "~2.27.0",
+    "follow-redirects": "0.0.7",
     "n3": "~0.4.0",
     "setimmediate": "~1.0.1",
     "sparqljs": "~1.0.1",
@@ -48,7 +48,7 @@
   ],
   "browser": {
     "crypto": "./lib/util/crypto-browser.js",
-    "request": "./lib/util/request-browser.js",
+    "./lib/util/Request": "./lib/util/Request-browser.js",
     "stream": false,
     "zlib": false
   }
