@@ -3,13 +3,7 @@ import sys
 import os
 import glob
 import subprocess
-import signal
 from multiprocessing import Pool
-
-
-def handler(signum, frame):
-    print "Forever is over!"
-    raise Exception("end of time")
 
 
 def main_parallel(command, start_fragment, config_file, query_folders, batch, cores):
@@ -43,9 +37,6 @@ if __name__ == '__main__':
     if len(sys.argv) == 1:
         print('Usage: python eval.py config_file query_folder')
     else:
-        # (command, server, query_folder)
-        signal.signal(signal.SIGALRM, handler)
-        signal.alarm(360)
         try:
             main_parallel(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6])
         except Exception, exc:
