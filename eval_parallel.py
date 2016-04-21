@@ -22,7 +22,7 @@ def main_parallel(command, start_fragment, config_file, query_folders, batch, co
 
 
 def main((command, start_fragment, config_file, query_folder, batch, folder_number)):
-    with open('executed_queries_list_' + str(folder_number + '.txt')) as query_list_file:
+    with open('executed_queries_list_' + str(folder_number + '.txt'), 'w') as query_list_file:
         for query_file in sorted(glob.glob(query_folder + '/*.rq')):
             query_list_file.write(query_file + '\n')
             cmd = 'bin/' + command + ' ' + start_fragment + ' -c ' + config_file + ' -f ' + os.path.join(os.path.dirname(os.path.realpath(__file__)), query_file + ' --maxNumberOfMappings ' + batch  + ' --outputFileNumber ' + str(folder_number))
