@@ -107,6 +107,20 @@ For instance, the WebID of a person called Bob [](https://bob.example.org/profil
    foaf:img <https://bob.example.org/picture.jpg> .
 ```
 
+For an organization, the document looks similar as, for instance, [](https://www.w3.org#webid):
+
+```
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<> a foaf:PersonalProfileDocument ;
+   foaf:maker <#webid> ;
+   foaf:primaryTopic <#webid> .
+
+<#webid> a foaf:Organization ;
+   foaf:name "W3C" ;
+   foaf:img <https://www.w3.org/2008/site/images/logo-w3c-mobile-lg> .
+```
+
 ##### Create a client certificate including WebID
 
 First, create a private key to create certificates.
