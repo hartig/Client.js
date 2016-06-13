@@ -1,3 +1,4 @@
+import json
 import traceback
 import sys
 import glob
@@ -8,14 +9,14 @@ import time
 import requests
 
 
-def run_query(url, query):
+def run_query(query, url):
     payload = {'query': query, 'format': 'json'}
 
     try:
         r = requests.post(url, payload, 300)
     except requests.exceptions.Timeout:
         return -1
-    # print r
+    print r
     if r.status_code == 200:
         return len(r.json()['results']['bindings'])
     return -2
@@ -25,17 +26,18 @@ def query(q, epr, f='application/json'):
     try:
         params = {'query': q}
         params = urllib.urlencode(params)
-        print(params)
         opener = urllib2.build_opener(urllib2.HTTPHandler)
-        request = urllib2.Request(epr + '?' + params, timeout=300)
+        request = urllib2.Request(epr + '?' + params)
         request.add_header('Accept', f)
         request.get_method = lambda: 'GET'
-        url = opener.open(request)
-        return url.read()
-    except Exception, e:
-        print(epr)
-        traceback.print_exc(file=sys.stdout)
-        raise e
+        url = opener.open(request, timeout=300)
+        return len(json.loads(url.read())['results']['bindings'])
+    except requests.exceptions.Timeout:
+        return -1
+    except Exception:
+        return -2
+        # traceback.print_exc(file=sys.stdout)
+        # raise e
 
 
 def main_parallel(command, sparql_server, query_folders, batch, cores):
@@ -54,28 +56,32 @@ def main_parallel(command, sparql_server, query_folders, batch, cores):
 
 
 def main((command, sparql_server, query_folder, batch, folder_number)):
-    with open('eval_endpoint_' + folder_number + '.csv', 'a') as results_file:
+    with open('eval_endpoint_' + str(folder_number) + '.csv', 'a') as results_file:
         for query_file in sorted(glob.glob(query_folder + '/*.rq')):
             print('Query: ' + query_file)
             query_list_file_name = 'executed_queries_list_' + command + '_' + str(folder_number) + '.txt'
             with open(query_list_file_name, 'a') as query_list_file:
                 query_list_file.write(query_file + '\n')
                 try:
-                    with open(sys.argv[1], 'r') as q:
+                    with open(query_file, 'r') as q:
                         content = q.read().strip()
                     # [queryFile,DEBUGtps,DEBUGfirstTime, DEBUGfirstHttp, DEBUGtime, DEBUGhttp, DEBUGdata, DEBUGtotal, 'TIMEOUT', timeoutInMins]
                     start = time.time()
-                    result = run_query(sparql_server, content)
+                    # result = run_query(content, sparql_server)
+                    result = query(content, sparql_server)
                     run_time = time.time() - start
                     if result == -1:
-                        results_file.write('direct,{0},{1},{2}}\n'.format(query_file, result, 'TIMEOUT'))
+                        # results_file.write('direct,{0},{1},{2}}\n'.format(query_file, result, 'TIMEOUT'))
+                        results_file.write('direct,' + query_file + ',' + str(result) + ',' + str(run_time) + ',' + 'TIMEOUT' + '\n')
                     elif result == -2:
-                        results_file.write('direct,{0},{1},{2},{3}}\n'.format(query_file, result, run_time, 'ERROR'))
+                        # results_file.write('direct,{0},{1},{2},{3}}\n'.format(query_file, result, run_time, 'ERROR'))
+                        results_file.write('direct,' + query_file + ',' + str(result) + ',' + str(run_time) + ',' + 'ERROR' + '\n')
                     else:
-                        results_file.write('direct,{0},{1},{2}}\n'.format(query_file, result, run_time))
+                        results_file.write('direct,' + query_file + ',' + str(result) + ',' + str(run_time) + '\n')
                 except Exception, e:
                     print(e)
-                    results_file.write('direct,{0},{1},{2},{3}}\n'.format(query_file, result, run_time, 'ERROR' + e))
+                    results_file.write('direct,' + query_file + ',' + str(result) + ',' + str(run_time) + ',' + 'ERROR ' + str(e) + '\n')
+                    # results_file.write('direct,{0},{1},{2},{3}}\n'.format(query_file, result, run_time, 'ERROR' + e))
                     traceback.print_exc(file=sys.stdout)
 
 
@@ -85,6 +91,7 @@ if __name__ == '__main__':
     else:
         try:
             main_parallel(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+            # main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
         except Exception, exc:
             print exc
             sys.exit()
