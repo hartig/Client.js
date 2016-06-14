@@ -46,7 +46,7 @@ def main_parallel(command, sparql_server, query_folders, batch, cores):
     folder_number = 0
     for query_folder in sorted(glob.glob(query_folders + '/*')):
         print(query_folder)
-        arglist.append((command, sparql_server, query_folder, batch, folder_number))
+        arglist.append((command, sparql_server, query_folder, batch, str(folder_number)))
         folder_number += 1
 
     print('Processing ' + str(folder_number) + ' files with ' +
@@ -56,9 +56,9 @@ def main_parallel(command, sparql_server, query_folders, batch, cores):
 
 
 def main((command, sparql_server, query_folder, batch, folder_number)):
-    with open('eval_endpoint_' + str(folder_number) + '.csv', 'a') as results_file:
+    with open('eval_endpoint_' + folder_number + '.csv', 'a') as results_file:
         for query_file in sorted(glob.glob(query_folder + '/*.rq')):
-            print('Query: ' + query_file)
+            # print('Query: ' + query_file)
             query_list_file_name = 'executed_queries_list_' + command + '_' + str(folder_number) + '.txt'
             with open(query_list_file_name, 'a') as query_list_file:
                 query_list_file.write(query_file + '\n')
