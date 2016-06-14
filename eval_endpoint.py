@@ -34,8 +34,9 @@ def query(q, epr, f='application/json'):
         return len(json.loads(url.read())['results']['bindings'])
     except requests.exceptions.Timeout:
         return -1
-    except Exception:
-        return -2
+    except Exception, e:
+        return e
+        # return -2
         # traceback.print_exc(file=sys.stdout)
         # raise e
 
@@ -70,14 +71,17 @@ def main((command, sparql_server, query_folder, batch, folder_number)):
                     # result = run_query(content, sparql_server)
                     result = query(content, sparql_server)
                     run_time = time.time() - start
+                    if result > -1:
+                        results_file.write('direct,' + query_file + ',' + str(result) + ',' + str(run_time) + '\n')
                     if result == -1:
                         # results_file.write('direct,{0},{1},{2}}\n'.format(query_file, result, 'TIMEOUT'))
                         results_file.write('direct,' + query_file + ',' + str(result) + ',' + str(run_time) + ',' + 'TIMEOUT' + '\n')
-                    elif result == -2:
-                        # results_file.write('direct,{0},{1},{2},{3}}\n'.format(query_file, result, run_time, 'ERROR'))
-                        results_file.write('direct,' + query_file + ',' + str(result) + ',' + str(run_time) + ',' + 'ERROR' + '\n')
+                    # elif result == -2:
+                    #     # results_file.write('direct,{0},{1},{2},{3}}\n'.format(query_file, result, run_time, 'ERROR'))
+                    #     results_file.write('direct,' + query_file + ',' + str(result) + ',' + str(run_time) + ',' + 'ERROR' + '\n')
                     else:
-                        results_file.write('direct,' + query_file + ',' + str(result) + ',' + str(run_time) + '\n')
+                        # results_file.write('direct,' + query_file + ',' + str(result) + ',' + str(run_time) + '\n')
+                        results_file.write('direct,' + query_file + ',' + str(result) + ',' + str(run_time) + ',' + 'ERROR' + '\n')
                 except Exception, e:
                     print(e)
                     results_file.write('direct,' + query_file + ',' + str(result) + ',' + str(run_time) + ',' + 'ERROR ' + str(e) + '\n')
