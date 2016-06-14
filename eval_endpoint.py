@@ -22,7 +22,8 @@ def run_query(query, url):
     return -2
 
 
-def query(q, epr, f='application/json'):
+# def query(q, epr, f='application/json'):
+def query(q, epr, f='application/sparql-results+json'):
     try:
         params = {'query': q}
         params = urllib.urlencode(params)
@@ -36,6 +37,7 @@ def query(q, epr, f='application/json'):
         return -1
     except Exception, e:
         print(e)
+        traceback.print_exc(file=sys.stdout)
         return -2
         # traceback.print_exc(file=sys.stdout)
         # raise e
@@ -57,11 +59,11 @@ def main_parallel(command, sparql_server, query_folders, batch, cores):
 
 
 def main((command, sparql_server, query_folder, batch, folder_number)):
-    with open('eval_endpoint_' + folder_number + '.csv', 'a') as results_file:
-        for query_file in sorted(glob.glob(query_folder + '/*.rq')):
-            # print('Query: ' + query_file)
-            query_list_file_name = 'executed_queries_list_' + command + '_' + str(folder_number) + '.txt'
-            with open(query_list_file_name, 'a') as query_list_file:
+    for query_file in sorted(glob.glob(query_folder + '/*.rq')):
+        print('Query: ' + query_file)
+        query_list_file_name = 'executed_queries_list_' + command + '_' + str(folder_number) + '.txt'
+        with open(query_list_file_name, 'a') as query_list_file:
+            with open('eval_endpoint_' + folder_number + '.csv', 'a') as results_file:
                 query_list_file.write(query_file + '\n')
                 try:
                     with open(query_file, 'r') as q:
