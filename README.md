@@ -139,7 +139,7 @@ Create a SSL client certificate that includes your WebID in the `subjectAltName`
 openssl req -new \
   -key certs/client/my-app-client.key.pem \
   -out certs/tmp/my-app-client.csr.pem \
-  -subj "/C=US/ST=Utah/L=Provo/O=ACME App Client/CN=client.example.net/subjectAltName=URI:https://bob.example.org/profile#me"
+  -subj "/C=US/ST=Utah/L=Provo/O=ACME App Client/CN=client.example.net/subjectAltName=uniformResourceIdentifier:https://bob.example.org/profile#me"
 ```
 
 ##### Add your public key to the WebID
@@ -147,7 +147,7 @@ openssl req -new \
 Additionally, add your public key to the WebID document.
 
 ```
-:bob cert:key [ a cert:RSAPublicKey;
+<#webid> cert:key [ a cert:RSAPublicKey;
                 cert:modulus "00cb24ed85d64d794b..."^^xsd:hexBinary;
                 cert:exponent 65537 ] .
 ```
