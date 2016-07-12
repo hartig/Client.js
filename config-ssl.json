@@ -17,8 +17,10 @@
   },
 
   "ssl": {
-    "key": "keys/my-app-client.key.pem",
-    "ca":  "keys/my-root-ca.crt.pem" ,
-    "cert": "keys/my-app-client.crt.pem"
+    "https://localhost:3000/dbpedia": {
+      "key": "certs/client/my-app-client.key.pem",
+      "ca":  "certs/client/my-root-ca.crt.pem" ,
+      "cert": "certs/client/my-app-client.crt.pem"
+    }
   }
 }
