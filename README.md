@@ -147,7 +147,7 @@ openssl req -new \
 
 Additionally, add your public key to the WebID document. 
 ```
-:bob cert:key [ a cert:RSAPublicKey;
+<#webid> cert:key [ a cert:RSAPublicKey;
                 cert:modulus "00cb24ed85d64d794b..."^^xsd:hexBinary;
                 cert:exponent 65537 ] .
 ```
