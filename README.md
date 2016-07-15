@@ -132,6 +132,7 @@ openssl genrsa \
 ```
 
 Create a SSL client certificate that includes your WebID in the `subjectAltName`.
+Don't forget to correctly fill in the Country (C), Locale (L), Organization (O) and Canonical Name (CN). Also remember to escape (\) the forward slashes in the subjectAltname URI.
 
 ```bash
 # Create a trusted client cert
@@ -139,40 +140,59 @@ Create a SSL client certificate that includes your WebID in the `subjectAltName`
 openssl req -new \
   -key certs/client/my-app-client.key.pem \
   -out certs/tmp/my-app-client.csr.pem \
-  -subj "/C=US/ST=Utah/L=Provo/O=ACME App Client/CN=client.example.net/subjectAltName=URI:https://bob.example.org/profile#me"
+  -subj "/C=US/ST=Utah/L=Provo/O=ACME App Client/CN=client.example.net/subjectAltName=uniformResourceIdentifier:https://bob.example.org/profile#me"
 ```
 
 ##### Add your public key to the WebID
 
-Additionally, add your public key to the WebID document.
-
+Additionally, add your public key to the WebID document. 
 ```
 :bob cert:key [ a cert:RSAPublicKey;
                 cert:modulus "00cb24ed85d64d794b..."^^xsd:hexBinary;
                 cert:exponent 65537 ] .
 ```
+
+You need the modulus and exponent. To get them, execute the following commands:
+
+modulus:
+```bash
+openssl rsa -in certs/client/my-app-client.key.pem -modulus -noout
+```
+
+exponent:
+```bash
+openssl rsa -in certs/client/my-app-client.key.pem -text -noout | awk '/Exponent/ { print $2 }'
+```
+
+
 ##### Become a trusted peer for the server.
 
-Exchange your certificate with the server so it can sign it with your root CA. See the [server documentation](https://github.com/LinkedDataFragments/Server.js/blob/feature-https-authentication/README.md#sign-certificates-from-clients) for more information.
+Exchange your certificate request with the server so it can sign it. See the [server documentation](https://github.com/LinkedDataFragments/Server.js/blob/feature-https-authentication/README.md#sign-certificates-from-clients) for more information.
 
 The server should return you the signed certificate, resulting in, for example, `keys/my-app-client.crt.pem`.
 
 
 #### Configure the client
 
-The client can the be easily configured to use HTTPS in combination with WebID like so.
+The client can the be easily configured to use HTTPS in combination with WebID like so. Note that you can add certificates for each data source separately.
 
 ```json
 {
   "ssl": {
-    "key": "keys/my-app-client.key.pem",
-    "ca":  "keys/my-root-ca.crt.pem" ,
-    "cert": "keys/my-app-client.crt.pem"
-  }
+     "https://localhost:8900/testdata": {
+        "key": "certs/client/my-app-client.key.pem",
+        "cert": "certs/client/my-app-client.crt.pem"
+      }
+   }
 }
 ```
 
 Make sure your WebID is online so the server is able to download it.
+
+When querying, it is possible that your machine doesn’t accept self-signed certificates, in which case you need to tell it to allow that:
+```bash
+export NODE_TLS_REJECT_UNAUTHORIZED="0"
+```
 
 ## License
 The Linked Data Fragments client is written by [Ruben Verborgh](http://ruben.verborgh.org/) and colleagues.
