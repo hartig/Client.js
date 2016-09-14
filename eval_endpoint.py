@@ -13,6 +13,7 @@ def run_query(query, url):
     payload = {'query': query, 'format': 'json'}
 
     try:
+        print('hola1')
         r = requests.post(url, payload, 300)
     except requests.exceptions.Timeout:
         return -1
@@ -70,8 +71,8 @@ def main((command, sparql_server, query_folder, batch, folder_number)):
                         content = q.read().strip()
                     # [queryFile,DEBUGtps,DEBUGfirstTime, DEBUGfirstHttp, DEBUGtime, DEBUGhttp, DEBUGdata, DEBUGtotal, 'TIMEOUT', timeoutInMins]
                     start = time.time()
-                    # result = run_query(content, sparql_server)
-                    result = query(content, sparql_server)
+                    print(start)
+                    result = run_query(sparql_server, content)
                     run_time = time.time() - start
                     if result == -1:
                         # results_file.write('direct,{0},{1},{2}}\n'.format(query_file, result, 'TIMEOUT'))
