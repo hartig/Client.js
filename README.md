@@ -1,4 +1,4 @@
-# Linked Data Fragments Client <img src="http://linkeddatafragments.org/images/logo.svg" width="100" align="right" alt="" />
+# brTPF-Aware Linked Data Fragments Client <img src="http://linkeddatafragments.org/images/logo.svg" width="100" align="right" alt="" />
 On today's Web, Linked Data is published in different ways,
 including [data dumps](http://downloads.dbpedia.org/3.9/en/),
 [subject pages](http://dbpedia.org/page/Linked_data),
@@ -10,7 +10,7 @@ is that they are either so powerful that their servers suffer from low availabil
 ([as is the case with SPARQL](http://sw.deri.org/~aidanh/docs/epmonitorISWC.pdf)),
 or either don't allow efficient querying.
 
-Instead, this client solves queries by accessing **Triple Pattern Fragments**.
+Instead, this client solves queries by accessing **Triple Pattern Fragments**, and it can also leverage **Bindings-Restricted Triple Pattern Fragments** (**brTPF**).
 <br>
 Each Triple Pattern Fragment offers:
 
@@ -21,6 +21,7 @@ Each Triple Pattern Fragment offers:
 - **controls** that lead to all other fragments of the same dataset
   _([example](http://data.linkeddatafragments.org/dbpedia?subject=&predicate=&object=%22John%22%40en))_.
 
+brTPFs extend the idea of Triple Pattern Fragments. To learn about this extension, refer to the [research paper about brTPF](http://arxiv.org/pdf/1608.08148).
 
 ## Execute SPARQL queries
 
