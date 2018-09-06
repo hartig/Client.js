@@ -1,3 +1,5 @@
+**Attention:** If you are looking for the **brTPF extension** of this LDF client, find it in the [`feature-brtpf` branch](https://github.com/hartig/Client.js/tree/feature-brtpf).
+
 # Linked Data Fragments Client <img src="http://linkeddatafragments.org/images/logo.svg" width="100" align="right" alt="" />
 On today's Web, Linked Data is published in different ways,
 including [data dumps](http://downloads.dbpedia.org/3.9/en/),
